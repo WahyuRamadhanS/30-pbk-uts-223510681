@@ -1,104 +1,109 @@
-<script setup>
-import { ref, onMounted, computed, watch } from 'vue'
+<template>
+  <div class="container">
+    <!-- Header with menu -->
+    <header class="header">
+      <div class="logo-container">
+        <img class="logo" src="file:///C:/Users/LENOVO/Downloads/Untitled%20design%20(4).png">
+        <h1 class="app-name">Todo & Post</h1>
+      </div>
+      <nav class="menu">
+        <ul>
+          <li @click="pilihMenu('todos')" :class="{ 'aktif': menuAktif === 'todos' }">Todos</li>
+          <li @click="pilihMenu('post')" :class="{ 'aktif': menuAktif === 'post' }">Post</li>
+        </ul>
+      </nav>
+    </header>
+    
+    <!-- Content depending on the selected menu -->
+    <div class="konten">
+      <div v-if="menuAktif === 'todos'">
+        <!-- TodoList component -->
+        <Todos />
+      </div>
+      <div v-else-if="menuAktif === 'post'">
+        <!-- Post component -->
+        <Post />
+      </div>
+    </div>
+  </div>
+</template>
 
-const todos = ref([])
-const name = ref('')
+<script>
+// Import TodoList and Post components
+import Todos from './components/todos.vue'; // Corrected import
+import Post from './components/post.vue'; // Corrected import
 
-const input_content = ref('')
-
-const filter = ref('all')
-
-
-const todos_asc = computed(() => todos.value.sort((a,b) =>{
-	return a.createdAt - b.createdAt
-}))
-
-watch(name, (newVal) => {
-	localStorage.setItem('name', newVal)
-})
-
-watch(todos, (newVal) => {
-	localStorage.setItem('todos', JSON.stringify(newVal))
-}, {
-	deep: true
-})
-
-const filteredTodos = computed(() => {
-    switch (filter.value) {
-        case 'complete':
-            return todos.value.filter(todo => todo.done);
-        case 'notComplete':
-            return todos.value.filter(todo => !todo.done);
-        default:
-            return todos.value;
+export default {
+  components: {
+    Todos, // Corrected component name
+    Post // Corrected component name
+  },
+  data() {
+    return {
+      menuAktif: 'todos' // Initial active menu
+    };
+  },
+  methods: {
+    pilihMenu(menu) {
+      this.menuAktif = menu;
     }
-});
-
-const addTodo = () => {
-	if (input_content.value.trim() === '') {
-		return
-	}
-
-	todos.value.push({
-		content: input_content.value,
-		done: false,
-		editable: false,
-		createdAt: new Date().getTime()
-	})
-}
-
-const removeTodo = (todo) => {
-	todos.value = todos.value.filter((t) => t !== todo)
-}
-
-onMounted(() => {
-	name.value = localStorage.getItem('name') || ''
-	todos.value = JSON.parse(localStorage.getItem('todos')) || []
-})
+  }
+};
 </script>
 
-<template>
-    <main class="app">
-        <section class="greeting">
-            <h2 class="title">
-                Hai welcome to, <input type="text" id="name" placeholder="Name here" v-model="name"> Note
-            </h2>
-        </section>
+<style scoped>
+/* Container styles */
+.container {
+  padding-top: 0px; /* Gap between header and content */
+  padding-bottom: 20px;
+}
 
-        <section class="create-todo">
-            <h3>CREATE ACTIVITIES</h3>
-            <form id="new-todo-form" @submit.prevent="addTodo">
-                <h4>What's on your activities?</h4>
-                <input type="text" id="content" placeholder="Add your activities" v-model="input_content" />
-                <input type="submit" value="Add todo" />
-            </form>
-        </section>
-    </main>
+/* Header styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  padding-bottom: 10px; /* Added padding at   the bottom of the header */
+  background-color: #102C57;
+  color: #FEFAF6;
+  border-radius: 5px;
+  border-bottom: 3px solid #fc2121; /* Bottom border on the header */
+  padding: 10px 20px 20px;
+  font-size: larger;
+}
 
-    <main class="app2">
-        <section class="todo-list">
-            <h3>Your Activities</h3>
-            <div>
-                <!-- Filter Buttons -->
-                <button @click="filter = 'all'"> All </button>
-				<button @click="filter = 'complete'"> Complete </button>
-                <button @click="filter = 'notComplete'"> Not Complete </button>
-                
-            </div>
-            <div class="list" id="todo-list">
-                <div v-for="todo in filteredTodos" :key="todo.createdAt" :class="`todo-item ${todo.done ? 'done' : ''}`">
-                    <label>
-                        <input type="checkbox" v-model="todo.done" />
-                        <span class="bubble"></span>
-                    </label>
-                    <div class="todo-content">
-                        <input type="text" v-model="todo.content" />
-                    </div>
-                    <div class="actions">
-                        <button class="delete" @click="removeTodo(todo)">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-</template>
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 75px;
+  height: 75px;
+  margin-right: 10px;
+}
+
+.app-name {
+  font-size: 24px;
+  margin: 0;
+}
+
+.menu ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.menu ul li {
+  margin-right: 30px;
+  cursor: pointer;
+
+}
+
+.menu ul li.aktif {
+  font-weight: bold;
+}
+</style>
+
