@@ -3,7 +3,6 @@
     <!-- Header with menu -->
     <header class="header">
       <div class="logo-container">
-        <img class="logo" src="file:///C:/Users/LENOVO/Downloads/Untitled%20design%20(4).png">
         <h1 class="app-name">Todo & Post</h1>
       </div>
       <nav class="menu">
