@@ -2,6 +2,11 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
+
 export default defineConfig({
-  plugins: [vue()],
-})
+  build: {
+    rollupOptions: {
+      external: ['/C:/Users/LENOVO/Downloads/Untitled design (4).png']
+    }
+  }
+});
