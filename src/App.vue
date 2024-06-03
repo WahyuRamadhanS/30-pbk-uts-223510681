@@ -17,30 +17,38 @@
     <!-- Content depending on the selected menu -->
     <div class="konten">
       <div v-if="menuAktif === 'todos'">
-        <!-- TodoList component -->
-        <Todos />
+        <!-- TodoList component with custom slot content -->
+        <Todos>
+          <template #create-todo-extra>
+            <p>This is extra content in the create activities section.</p>
+          </template>
+        </Todos>
       </div>
       <div v-else-if="menuAktif === 'post'">
-        <!-- Post component -->
-        <Post />
+        <!-- Post component with selected user ID and custom slot content -->
+        <Post :selectedUserId="selectedUserId">
+          <template #custom-content>
+            <p>This is custom content displayed above the post list.</p>
+          </template>
+        </Post>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// Import TodoList and Post components
-import Todos from './components/todos.vue'; // Corrected import
-import Post from './components/post.vue'; // Corrected import
+import Todos from './components/todos.vue'; 
+import Post from './components/post.vue'; 
 
 export default {
   components: {
-    Todos, // Corrected component name
-    Post // Corrected component name
+    Todos,
+    Post
   },
   data() {
     return {
-      menuAktif: 'todos' // Initial active menu
+      menuAktif: 'todos',
+      selectedUserId: null // You can set this dynamically based on your requirements
     };
   },
   methods: {
